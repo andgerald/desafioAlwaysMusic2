@@ -47,6 +47,25 @@ const nuevo = async ({ rutEstudiante, nombre, curso, nivel }) => {
   }
 };
 
+//consultar estudiante por rut
+const rut = async ({ rutEstudiante }) => {
+  try {
+    const res = await pool.query(`SELECT *  FROM users WHERE rut=$1 `, [
+      rutEstudiante,
+    ]);
+    rutEstudiante === undefined
+      ? console.log("Debes ingresar un rut")
+      : res.rows[0] === undefined
+      ? console.log("El rut:", rutEstudiante, "no existe en la base de datos")
+      : console.log("Usuario consultado por rut:", res.rows[0]);
+  } catch (e) {
+    const error = errors(e.code, status, message);
+    console.log("Codigo: ", error.code);
+    console.log("Estado: ", error.status);
+    console.log("Mensaje de Error: ", error.message);
+  }
+};
+
 (async () => {
   // recibir funciones y campos de la linea de comando
   switch (funcion) {
@@ -55,6 +74,9 @@ const nuevo = async ({ rutEstudiante, nombre, curso, nivel }) => {
       break;
     case "nuevo":
       nuevo({ rutEstudiante, nombre, curso, nivel });
+      break;
+    case "rut":
+      rut({ rutEstudiante });
       break;
   }
 
@@ -65,4 +87,8 @@ const nuevo = async ({ rutEstudiante, nombre, curso, nivel }) => {
 // node index consulta
 
 //Para agregar un usuario
-//node index nuevo "14.222.433-2" "manchita" "guitarra" "5"
+//node index nuevo "14.222.433-2" "Carolina Perez" "guitarra" "5"
+//node index nuevo "18.645.341-8" "Geraldine Becerra" "Trompeta" "1"
+
+//Para consultar por rut
+//node index "14.222.433-2"
