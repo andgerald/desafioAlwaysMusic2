@@ -65,6 +65,25 @@ const rut = async ({ rutEstudiante }) => {
     console.log("Mensaje de Error: ", error.message);
   }
 };
+//consultar para eliminar un estudiante por rut
+const eliminar = async ({ rutEstudiante }) => {
+  try {
+    const res = await pool.query(
+      `DELETE  FROM users WHERE rut=$1 RETURNING * `,
+      [rutEstudiante]
+    );
+    rutEstudiante === undefined
+      ? console.log("Error: Debes ingresar un rut")
+      : res.rowCount === 0
+      ? console.log("Error: El rut ingresado no es válido")
+      : console.log("Usuario eliminado:", res.rows[0]);
+  } catch (e) {
+    const error = errors(e.code, status, message);
+    console.log("Codigo: ", error.code);
+    console.log("Estado: ", error.status);
+    console.log("Mensaje de Error: ", error.message);
+  }
+};
 
 (async () => {
   // recibir funciones y campos de la linea de comando
@@ -77,6 +96,9 @@ const rut = async ({ rutEstudiante }) => {
       break;
     case "rut":
       rut({ rutEstudiante });
+      break;
+    case "eliminar":
+      eliminar({ rutEstudiante });
       break;
   }
 
@@ -91,4 +113,7 @@ const rut = async ({ rutEstudiante }) => {
 //node index nuevo "18.645.341-8" "Geraldine Becerra" "Trompeta" "1"
 
 //Para consultar por rut
+//node index "14.222.433-2"
+
+//Para eliminar  un esrudiante
 //node index "14.222.433-2"
