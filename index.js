@@ -85,6 +85,22 @@ const eliminar = async ({ rutEstudiante }) => {
   }
 };
 
+//editar informacion del estudiante
+const editar = async ({ rutEstudiante, nombre, curso, nivel }) => {
+  try {
+    await pool.query(
+      `UPDATE users  SET  nombre=$2, curso=$3 , nivel=$4 WHERE rut=$1 RETURNING *`,
+      [rutEstudiante, nombre, curso, nivel]
+    );
+    console.log(`El estudiante con rut: ${rutEstudiante} editado  con éxito`);
+  } catch (e) {
+    const error = errors(e.code, status, message);
+    console.log("Codigo: ", error.code);
+    console.log("Estado: ", error.status);
+    console.log("Mensaje de Error: ", error.message);
+  }
+};
+
 (async () => {
   // recibir funciones y campos de la linea de comando
   switch (funcion) {
@@ -99,6 +115,12 @@ const eliminar = async ({ rutEstudiante }) => {
       break;
     case "eliminar":
       eliminar({ rutEstudiante });
+      break;
+    case "editar":
+      editar({ nombre, rutEstudiante, curso, nivel });
+      break;
+    default:
+      console.log("Funcion: " + funcion + "no es valida");
       break;
   }
 
@@ -115,5 +137,8 @@ const eliminar = async ({ rutEstudiante }) => {
 //Para consultar por rut
 //node index "14.222.433-2"
 
-//Para eliminar  un esrudiante
+//Para eliminar  un estudiante
 //node index "14.222.433-2"
+
+//Para editar un estudiante
+//node index editar '14.222.433-2', 'Geraldine Carolina', 'Trompeta', '2'
