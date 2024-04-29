@@ -6,7 +6,7 @@ function errors(code, status, message) {
       break;
     case "28P01":
       status = 400;
-      message = "autentificacion password falló o no existe usuario: ";
+      message = "Usuario o clave incorrectos: ";
       break;
     case "42P01":
       status = 400;
@@ -14,7 +14,7 @@ function errors(code, status, message) {
       break;
     case "3D000":
       status = 400;
-      message = "Base de Datos a conectar no existe";
+      message = "La base de datos no existe";
       break;
     case "ENOTFOUND":
       status = 500;
@@ -22,7 +22,11 @@ function errors(code, status, message) {
       break;
     case "ECONNREFUSED":
       status = 500;
-      message = "Error en el puerto de conexion a BD";
+      message = "Error en el puerto de conexion ";
+      break;
+    case "23502":
+      status = 400;
+      message = "Falta ingresar parametros en la consulta";
       break;
     default:
       status = 500;
